@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:RegistroEstudiantes.Models"
+             x:Class="RegistroEstudiantes.Views.RegistroEstudiantesPage"
+             Title="Registro de Estudiantes"
+             BackgroundColor="#F3F6FB">
+    <ScrollView>
+        <VerticalStackLayout Padding="24,28" Spacing="20" MaximumWidthRequest="900" HorizontalOptions="Center">
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Registro de Estudiantes" FontSize="30" FontAttributes="Bold" TextColor="#172B4D" SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="Administra el registro de estudiantes de forma simple y organizada." FontSize="15" TextColor="#64748B" />
+            </VerticalStackLayout>
+
+            <Border Padding="22" Stroke="#E2E8F0" StrokeThickness="1" BackgroundColor="White" StrokeShape="RoundRectangle 18">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Datos del estudiante" FontSize="20" FontAttributes="Bold" TextColor="#172B4D" />
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="14" RowSpacing="12">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
+                            <Label Text="Nombre *" FontSize="13" TextColor="#475569" />
+                            <Entry x:Name="NombreEntry" Placeholder="Nombre del estudiante" MaxLength="60" ReturnType="Next" AutomationId="NombreEntry" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="5">
+                            <Label Text="Apellido *" FontSize="13" TextColor="#475569" />
+                            <Entry x:Name="ApellidoEntry" Placeholder="Apellido del estudiante" MaxLength="60" ReturnType="Next" AutomationId="ApellidoEntry" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="5">
+                            <Label Text="Número de cuenta *" FontSize="13" TextColor="#475569" />
+                            <Entry x:Name="NumeroCuentaEntry" Placeholder="Número de cuenta" MaxLength="30" ReturnType="Next" AutomationId="NumeroCuentaEntry" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="5">
+                            <Label Text="Carrera *" FontSize="13" TextColor="#475569" />
+                            <Entry x:Name="CarreraEntry" Placeholder="Carrera universitaria" MaxLength="100" ReturnType="Done" AutomationId="CarreraEntry" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Label x:Name="EstadoLabel" IsVisible="False" FontSize="13" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Button x:Name="GuardarButton" Text="Guardar Estudiante" Clicked="OnGuardarClicked" BackgroundColor="#2563EB" TextColor="White" CornerRadius="10" FontAttributes="Bold" />
+                        <Button Grid.Column="1" Text="Limpiar" Clicked="OnLimpiarClicked" BackgroundColor="#E8EEF7" TextColor="#334155" CornerRadius="10" />
+                    </Grid>
+                    <ActivityIndicator x:Name="CargaIndicator" IsRunning="False" IsVisible="False" Color="#2563EB" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Estudiantes registrados" FontSize="21" FontAttributes="Bold" TextColor="#172B4D" />
+                    <Label x:Name="ContadorLabel" Text="0 estudiantes" FontSize="13" TextColor="#64748B" />
+                </VerticalStackLayout>
+            </Grid>
+            <Border Padding="12,4" Stroke="#E2E8F0" StrokeThickness="1" BackgroundColor="White" StrokeShape="RoundRectangle 12">
+                <SearchBar x:Name="BusquedaEntry" Placeholder="Buscar por nombre, cuenta, carrera o ID" TextChanged="OnBusquedaTextChanged" />
+            </Border>
+            <Label x:Name="VacioLabel" Text="Aún no hay estudiantes registrados. Completa el formulario para agregar el primero." TextColor="#64748B" HorizontalTextAlignment="Center" Padding="20" IsVisible="False" />
+            <VerticalStackLayout x:Name="EstudiantesLayout" BindableLayout.ItemsSource="{Binding EstudiantesVisibles}" Spacing="12">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:Estudiante">
+                        <Border Padding="18" Stroke="#E2E8F0" StrokeThickness="1" BackgroundColor="White" StrokeShape="RoundRectangle 16">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="14" RowSpacing="5">
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="#172B4D" />
+                                    <Label Text="{Binding Apellido}" FontSize="18" FontAttributes="Bold" TextColor="#172B4D" />
+                                </HorizontalStackLayout>
+                                <Label Grid.Row="1" Text="{Binding NumeroCuenta, StringFormat='Cuenta: {0}'}" FontSize="13" TextColor="#475569" />
+                                <Label Grid.Row="2" Text="{Binding Carrera, StringFormat='Carrera: {0}'}" FontSize="13" TextColor="#475569" />
+                                <VerticalStackLayout Grid.Column="1" Grid.RowSpan="3" HorizontalOptions="End" VerticalOptions="Center" Spacing="5">
+                                    <Label Text="{Binding Id, StringFormat='ID #{0}'}" FontSize="12" TextColor="#64748B" HorizontalTextAlignment="End" />
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Button Text="Editar" Clicked="OnEditarClicked" Padding="12,6" FontSize="13" BackgroundColor="#E8F0FF" TextColor="#1D4ED8" CornerRadius="8" />
+                                        <Button Text="Eliminar" Clicked="OnEliminarClicked" Padding="12,6" FontSize="13" BackgroundColor="#FEF2F2" TextColor="#B91C1C" CornerRadius="8" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
